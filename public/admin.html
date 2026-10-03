@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Live Manager</title>
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Cropper.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+
+    <style>
+        :root {
+            --color-primary: #f9004d;
+            --color-dark: #101010;
+            --color-card: #212428;
+            --color-text: #c4cfde;
+            --color-heading: #ffffff;
+            --color-subheading: rgba(196, 207, 222, 0.75);
+            --color-border: rgba(255, 255, 255, 0.08);
+            --gradient-primary: linear-gradient(135deg, #f9004d 0%, #ff416c 100%);
+            --bg-input: #141518;
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--color-dark); color: var(--color-text); line-height: 1.7; min-height: 100vh; }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Montserrat', sans-serif; color: var(--color-heading); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+
+        .rn-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 600;
+            letter-spacing: 1px; text-transform: uppercase; padding: 12px 28px;
+            border-radius: 6px; border: none; cursor: pointer; transition: var(--transition); gap: 8px;
+        }
+        .btn-primary { background: var(--gradient-primary); color: #fff; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(249,0,77,0.4); }
+        .btn-danger { background: #e63946; color: #fff; }
+
+        /* Login Screen */
+        #loginScreen {
+            display: flex; min-height: 100vh; width: 100%; align-items: center;
+            justify-content: center; padding: 20px;
+            background: radial-gradient(circle at 50% 50%, rgba(249, 0, 77, 0.08) 0%, transparent 60%), #101010;
+        }
+
+        .login-card {
+            background: var(--color-card); border: 1px solid var(--color-border);
+            border-radius: 16px; max-width: 440px; width: 100%; padding: 45px 35px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8); text-align: center;
+        }
+        .login-logo { font-size: 28px; font-weight: 900; color: #fff; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .login-logo span { color: var(--color-primary); }
+        .login-error { color: #e63946; font-size: 13px; margin-top: 12px; display: none; font-weight: 500; }
+
+        /* Dashboard */
+        #dashboardPanel { display: none; }
+        .dashboard-header {
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--color-card); padding: 25px 35px; border-radius: 12px;
+            border: 1px solid var(--color-border); margin-bottom: 35px;
+        }
+
+        .dash-card {
+            background: var(--color-card); border: 1px solid var(--color-border);
+            border-radius: 12px; padding: 30px; margin-bottom: 35px;
+        }
+        .dash-card-title {
+            font-size: 20px; margin-bottom: 20px; padding-bottom: 12px;
+            border-bottom: 1px solid var(--color-border); color: var(--color-primary);
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 20px; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        .form-group label { font-size: 13px; font-weight: 600; text-transform: uppercase; color: var(--color-heading); }
+        .form-control {
+            background: var(--bg-input); border: 1px solid var(--color-border);
+            padding: 12px 16px; border-radius: 6px; color: #fff; font-family: inherit; font-size: 14px;
+        }
+        .form-control:focus { outline: none; border-color: var(--color-primary); }
+
+        .dash-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .dash-table th, .dash-table td { padding: 12px 15px; border: 1px solid var(--color-border); text-align: left; font-size: 14px; }
+        .dash-table th { background: #141518; color: #fff; }
+        .btn-sm-del { padding: 6px 12px; background: #e63946; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; }
+
+        .upload-field-container {
+            display: flex; gap: 15px; align-items: center; background: var(--bg-input);
+            padding: 12px; border-radius: 8px; border: 1px dashed var(--color-border);
+        }
+        .upload-preview-thumb {
+            width: 60px; height: 75px; object-fit: cover; border-radius: 6px;
+            background: #25282d; border: 1px solid var(--color-border);
+        }
+
+        .msg-badge {
+            background: var(--color-primary); color: #fff; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-left: 10px;
+        }
+
+        /* Modal Crop Overlay */
+        .crop-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.88); backdrop-filter: blur(8px);
+            z-index: 20000; display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .crop-modal-overlay.active { display: flex; }
+        .crop-box-wrapper {
+            background: var(--color-card); border: 1px solid var(--color-border);
+            border-radius: 12px; max-width: 650px; width: 100%; padding: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+        }
+        .crop-img-area { max-height: 420px; width: 100%; overflow: hidden; background: #111; border-radius: 8px; margin-bottom: 20px; }
+        .crop-img-area img { max-width: 100%; }
+    </style>
+</head>
+<body>
+
+    <!-- 1. LOGIN SCREEN -->
+    <div id="loginScreen">
+        <div class="login-card">
+            <div class="login-logo">ADMIN <span>LOGIN</span></div>
+            <p style="font-size: 14px; color: var(--color-subheading); margin-bottom: 25px;">Enter credentials to access the Dashboard</p>
+            
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group" style="text-align: left;">
+                    <label>Admin ID / Username</label>
+                    <input type="text" id="loginUser" class="form-control" placeholder="admin" required autocomplete="off">
+                </div>
+                <div class="form-group" style="text-align: left;">
+                    <label>Password</label>
+                    <input type="password" id="loginPass" class="form-control" placeholder="123456" required>
+                </div>
+                <p id="loginError" class="login-error"><i class="fa-solid fa-triangle-exclamation"></i> Invalid Username or Password!</p>
+                <button type="submit" class="rn-btn btn-primary" style="width: 100%; margin-top: 15px;">Login to Dashboard</button>
+            </form>
+            <a href="/" style="display:inline-block; margin-top: 22px; font-size: 13px; color: var(--color-primary); text-decoration: none;">
+                <i class="fa-solid fa-arrow-left"></i> Back to Main Site
+            </a>
+        </div>
+    </div>
+
+    <!-- 2. DASHBOARD MAIN VIEW -->
+    <div class="container" id="dashboardPanel">
+        <div class="dashboard-header">
+            <div>
+                <h2>Live Code-Sync Dashboard</h2>
+                <p style="font-size: 14px; color: var(--color-subheading);">Changes are written permanently into <code>data.json</code></p>
+            </div>
+            <div style="display: flex; gap: 12px;">
+                <a href="/" target="_blank" class="rn-btn btn-primary" style="padding: 10px 18px; font-size: 12px; text-decoration: none;">
+                    <i class="fa-solid fa-external-link"></i> View Live Site
+                </a>
+                <button class="rn-btn btn-danger" onclick="logout()" style="padding: 10px 18px; font-size: 12px;">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- CLIENT INBOX SECTION -->
+        <div class="dash-card" style="border: 1px solid rgba(249, 0, 77, 0.3);">
+            <h3 class="dash-card-title">
+                <i class="fa-solid fa-envelope-open-text"></i> Client Messages & Inquiries
+                <span id="inboxBadge" class="msg-badge">0 Messages</span>
+            </h3>
+            <p style="font-size: 13px; color: var(--color-subheading); margin-bottom: 15px;">Messages submitted by visitors through the contact form on your portfolio.</p>
+            
+            <div style="overflow-x: auto;">
+                <table class="dash-table">
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Sender Name</th>
+                            <th>Email Address</th>
+                            <th>Message</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dashMessagesTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Admin ID & Password -->
+        <div class="dash-card">
+            <h3 class="dash-card-title"><i class="fa-solid fa-shield-halved"></i> Admin Credentials Manager</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Admin ID / Username</label>
+                    <input type="text" id="cfgAdminUser" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" id="cfgAdminPass" class="form-control">
+                </div>
+            </div>
+            <button class="rn-btn btn-primary" onclick="saveAdminAuth()">Save Credentials</button>
+        </div>
+
+        <!-- Logo -->
+        <div class="dash-card">
+            <h3 class="dash-card-title"><i class="fa-solid fa-gem"></i> Logo & Branding</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Logo First Text</label>
+                    <input type="text" id="cfgLogoFirst" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Logo Highlight Text (Pink/Red)</label>
+                    <input type="text" id="cfgLogoHighlight" class="form-control">
+                </div>
+            </div>
+            <button class="rn-btn btn-primary" onclick="saveLogo()">Save Logo</button>
+        </div>
+
+        <!-- Hero Section -->
+        <div class="dash-card">
+            <h3 class="dash-card-title"><i class="fa-solid fa-home"></i> Hero Banner & CV Upload Manager</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Top Badge</label>
+                    <input type="text" id="cfgHeroBadge" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" id="cfgHeroName" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Tagline</label>
+                    <input type="text" id="cfgHeroTagline" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Hero Description</label>
+                <textarea id="cfgHeroDesc" class="form-control" rows="3"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Hero Portrait Picture (Upload & Crop, OR URL)</label>
+                <div class="upload-field-container">
+                    <img id="heroImgThumb" class="upload-preview-thumb" src="" alt="Thumbnail">
+                    <div style="flex: 1;">
+                        <input type="file" id="heroFileInput" accept="image/*" style="display: none;" onchange="handleFileSelect(event, 'hero', 4/5)">
+                        <button type="button" class="rn-btn btn-primary" style="padding: 9px 18px; font-size: 12px; margin-bottom: 8px;" onclick="document.getElementById('heroFileInput').click()">
+                            <i class="fa-solid fa-crop-simple"></i> Choose Image to Crop
+                        </button>
+                        <input type="text" id="cfgHeroImg" class="form-control" placeholder="Or paste image URL here..." oninput="updateThumb('heroImgThumb', this.value)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Hire Me Button Text</label>
+                    <input type="text" id="cfgHeroBtn" class="form-control">
+                </div>
+            </div>
+
+            <!-- CV Upload -->
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--color-border);">
+                <label style="font-size: 14px; text-transform: uppercase; font-weight: 700; color: var(--color-heading); display: block; margin-bottom: 10px;">
+                    <i class="fa-solid fa-file-pdf" style="color: var(--color-primary); margin-right: 6px;"></i> Upload Resume / CV (PDF or DOC)
+                </label>
+                <div class="upload-field-container">
+                    <div style="font-size: 32px; color: var(--color-primary); padding: 0 10px;"><i class="fa-solid fa-file-lines"></i></div>
+                    <div style="flex: 1;">
+                        <input type="file" id="cvFileInput" accept=".pdf,.doc,.docx" style="display: none;" onchange="handleCvUpload(event)">
+                        <button type="button" class="rn-btn btn-primary" style="padding: 9px 18px; font-size: 12px; margin-bottom: 8px;" onclick="document.getElementById('cvFileInput').click()">
+                            <i class="fa-solid fa-upload"></i> Choose CV File
+                        </button>
+                        <input type="text" id="cfgCvUrl" class="form-control" placeholder="CV file path" readonly>
+                    </div>
+                </div>
+            </div>
+            <button class="rn-btn btn-primary" style="margin-top: 20px;" onclick="saveHero()">Save Hero & CV</button>
+        </div>
+
+        <!-- About Section -->
+        <div class="dash-card">
+            <h3 class="dash-card-title"><i class="fa-solid fa-user"></i> About Bio & Image Crop Upload</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="cfgAboutTitle" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>About Image (Upload & Crop, OR URL)</label>
+                <div class="upload-field-container">
+                    <img id="aboutImgThumb" class="upload-preview-thumb" src="" alt="Thumbnail">
+                    <div style="flex: 1;">
+                        <input type="file" id="aboutFileInput" accept="image/*" style="display: none;" onchange="handleFileSelect(event, 'about', 4/5)">
+                        <button type="button" class="rn-btn btn-primary" style="padding: 9px 18px; font-size: 12px; margin-bottom: 8px;" onclick="document.getElementById('aboutFileInput').click()">
+                            <i class="fa-solid fa-crop-simple"></i> Choose Image to Crop
+                        </button>
+                        <input type="text" id="cfgAboutImg" class="form-control" placeholder="Or paste image URL here..." oninput="updateThumb('aboutImgThumb', this.value)">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description Paragraph</label>
+                <textarea id="cfgAboutDesc" class="form-control" rows="3"></textarea>
+            </div>
+            <button class="rn-btn btn-primary" onclick="saveAbout()">Save About Bio</button>
+        </div>
+
+        <!-- Education & Certification (Separate Inputs for School, Department, CGPA, Year) -->
+        <div class="dash-card">
+            <h3 class="dash-card-title"><i class="fa-solid fa-graduation-cap"></i> Education & Certification</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Degree / Certificate Title</label>
+                    <input type="text" id="newEduTitle" class="form-control" placeholder="e.g. Secondary School Certificate (SSC)">
+                </div>
+                <div class="form-group">
+                    <label>School / Institution</label>
+                    <input type="text" id="newEduSchool" class="form-control" placeholder="e.g. Ideal School & College">
+                </div>
+                <div class="form-group">
+                    <label>Department / Group</label>
+                    <input type="text" id="newEduDept" class="form-control" placeholder="e.g. Science / BBA">
+                </div>
+                <div class="form-group">
+                    <label>CGPA / Grade / Details</label>
+                    <input type="text" id="newEduCgpa" class="form-control" placeholder="e.g. GPA 5.00 / Freshers">
+                </div>
+                <div class="form-group">
+                    <label>Passing Year</label>
+                    <input type="text" id="newEduYear" class="form-control" placeholder="e.g. 2019">
+                </div>
+            </div>
+            <button class="rn-btn btn-primary" onclick="addEdu()">+ Add Education</button>
+            <table class="dash-table">
+                <thead>
+                    <tr>
+                        <th>Degree / Title</th>
+                        <th>School / Institution</th>
+                        <th>Department</th>
+                        <th>CGPA / Grade</th>
+                        <th>Year</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="dashEducationTable"></tbody>
+            </table>
+        </div>
+
+        <!-- Tab 1: Skills -->
+        <div class="dash-card">
+            <h3 class="dash-card-title"><i class="fa-solid fa-sliders"></i> Main Skills</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Skill Title</label>
+                    <input type="text" id="newSkillName" class="form-control" placeholder="e.g. UI/UX Design">
+                </div>
+                <div class="form-group">
+                    <label>Subtitle / Note</label>
+                    <input type="text" id="newSkillSubtitle" class="form-control" placeholder="Note">
+                </div>
+                <div class="form-group">
+                    <label>Progress Bar Width (%)</label>
+                    <input type="number" id="newSkillPercent" class="form-control" placeholder="90" min="1" max="100">
+                </div>
+            </div>
+            <button class="rn-btn btn-primary" onclick="addSkill()">+ Add Skill</button>
+            <table class="dash-table">
+                <thead><tr><th>Skill Name</th><th>Subtitle</th><th>Progress</th><th>Action</th></tr></thead>
+                <tbody id="dashSkillsTable"></tbody>
+            </table>
+        </div>
+
+        <!-- Tab 2: Awards -->
+        <div class="dash-card">
+            <h3 class="dash-card-title"><i class="fa-solid fa-trophy"></i> Awards</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Award Title</label>
+                    <input type="text" id="newAwardTitle" class="form-control" placeholder="e.g. Best Developer">
+                </div>
+                <div class="form-group">
+                    <label>Year / Detail</label>
+                    <input type="text" id="newAwardDetail" class="form-control" placeholder="2024">
+                </div>
+            </div>
+            <button class="rn-btn btn-primary" onclick="addAward()">+ Add Award</button>
+            <table class="dash-table">
+                <thead><tr><th>Award Title</th><th>Year / Detail</th><th>Action</th></tr></thead>
+                <tbody id="dashAwardsTable"></tbody>
+            </table>
+        </div>
+
+        <!-- Tab 3: Experience -->
+        <div class="dash-card">
+            <h3 class="dash-card-title"><i class="fa-solid fa-briefcase"></i> Experience</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Job Role & Company</label>
+                    <input type="text" id="newExpRole" class="form-control" placeholder="e.g. Lead Developer">
+                </div>
+                <div class="form-group">
+                    <label>Duration / Location</label>
+                    <input type="text" id="newExpDuration" class="form-control" placeholder="2022 - Present">
+                </div>
+            </div>
+            <button class="rn-btn btn-primary" onclick="addExp()">+ Add Experience</button>
+            <table class="dash-table">
+                <thead><tr><th>Role & Company</th><th>Duration</th><th>Action</th></tr></thead>
+                <tbody id="dashExperienceTable"></tbody>
+            </table>
+        </div>
+
+        <!-- Services -->
+        <div class="dash-card">
+            <h3 class="dash-card-title"><i class="fa-solid fa-laptop-code"></i> Services Grid Manager</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Service Title</label>
+                    <input type="text" id="newServiceTitle" class="form-control" placeholder="Website Development">
+                </div>
+                <div class="form-group">
+                    <label>Icon Class (e.g. fa-solid fa-code)</label>
+                    <input type="text" id="newServiceIcon" class="form-control" placeholder="fa-solid fa-code">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="newServiceDesc" class="form-control" rows="2" placeholder="Details..."></textarea>
+            </div>
+            <button class="rn-btn btn-primary" onclick="addService()">+ Add Service</button>
+            <table class="dash-table">
+                <thead><tr><th>Icon</th><th>Title</th><th>Action</th></tr></thead>
+                <tbody id="dashServicesTable"></tbody>
+            </table>
+        </div>
+
+        <!-- Projects -->
+        <div class="dash-card">
+            <h3 class="dash-card-title"><i class="fa-solid fa-images"></i> Portfolio Projects & Crop Upload</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Project Title</label>
+                    <input type="text" id="newProjectTitle" class="form-control" placeholder="Project Title">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <input type="text" id="newProjectCat" class="form-control" placeholder="Development / Design">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Project Thumbnail Picture</label>
+                <div class="upload-field-container">
+                    <img id="projectImgThumb" class="upload-preview-thumb" src="" alt="Thumbnail" style="width: 80px; height: 60px;">
+                    <div style="flex: 1;">
+                        <input type="file" id="projectFileInput" accept="image/*" style="display: none;" onchange="handleFileSelect(event, 'project', 16/11)">
+                        <button type="button" class="rn-btn btn-primary" style="padding: 9px 18px; font-size: 12px; margin-bottom: 8px;" onclick="document.getElementById('projectFileInput').click()">
+                            <i class="fa-solid fa-crop-simple"></i> Choose Project Image to Crop
+                        </button>
+                        <input type="text" id="newProjectImg" class="form-control" placeholder="Image URL..." oninput="updateThumb('projectImgThumb', this.value)">
+                    </div>
+                </div>
+            </div>
+            <button class="rn-btn btn-primary" onclick="addProject()">+ Add Project</button>
+            <table class="dash-table">
+                <thead><tr><th>Thumbnail</th><th>Title</th><th>Category</th><th>Action</th></tr></thead>
+                <tbody id="dashProjectsTable"></tbody>
+            </table>
+        </div>
+
+        <!-- Contact & Socials -->
+        <div class="dash-card">
+            <h3 class="dash-card-title"><i class="fa-solid fa-phone"></i> Contact Details</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Heading</label>
+                    <input type="text" id="cfgContactHeading" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="text" id="cfgPhone" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="text" id="cfgEmail" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="cfgContactDesc" class="form-control" rows="2"></textarea>
+            </div>
+            <button class="rn-btn btn-primary" onclick="saveContact()">Save Contact</button>
+
+            <!-- Social Links -->
+            <div style="margin-top: 35px; border-top: 1px solid var(--color-border); padding-top: 25px;">
+                <h4 style="font-size: 16px; margin-bottom: 15px; color: var(--color-heading);">
+                    <i class="fa-solid fa-share-nodes" style="color: var(--color-primary); margin-right: 8px;"></i> Manage Social Links (LinkedIn, GitHub, etc.)
+                </h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Platform Name</label>
+                        <select id="newSocialPlatform" class="form-control" onchange="autoFillSocialIcon(this.value)">
+                            <option value="LinkedIn">LinkedIn</option>
+                            <option value="GitHub">GitHub</option>
+                            <option value="Facebook">Facebook</option>
+                            <option value="Instagram">Instagram</option>
+                            <option value="Twitter">Twitter / X</option>
+                            <option value="YouTube">YouTube</option>
+                            <option value="Other">Other Custom</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Icon Class</label>
+                        <input type="text" id="newSocialIcon" class="form-control" value="fa-brands fa-linkedin-in">
+                    </div>
+                    <div class="form-group">
+                        <label>Profile URL</label>
+                        <input type="url" id="newSocialUrl" class="form-control" placeholder="https://linkedin.com/in/username">
+                    </div>
+                </div>
+                <button class="rn-btn btn-primary" onclick="addSocialLink()">+ Add Social Link</button>
+                <table class="dash-table">
+                    <thead><tr><th>Icon</th><th>Platform</th><th>Profile URL</th><th>Action</th></tr></thead>
+                    <tbody id="dashSocialTable"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Crop Modal -->
+    <div class="crop-modal-overlay" id="cropModalOverlay">
+        <div class="crop-box-wrapper">
+            <h3 style="margin-bottom: 15px; font-size: 18px; color: #fff;"><i class="fa-solid fa-crop"></i> Crop & Adjust Image</h3>
+            <div class="crop-img-area"><img id="imageToCrop" src="" alt="Selected"></div>
+            <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                <button type="button" class="rn-btn btn-danger" style="padding: 10px 20px; font-size: 12px;" onclick="closeCropModal()">Cancel</button>
+                <button type="button" class="rn-btn btn-primary" style="padding: 10px 22px; font-size: 12px;" onclick="cropAndUploadImage()">Crop & Upload</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script>
+        let siteData = {};
+        let cropper = null;
+        let activeCropTarget = 'hero';
+        let currentAspectRatio = 4 / 5;
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById("loginUser").value.trim();
+            const password = document.getElementById("loginPass").value.trim();
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const result = await res.json();
+                if (result.success) {
+                    document.getElementById('loginScreen').style.display = 'none';
+                    document.getElementById('dashboardPanel').style.display = 'block';
+                    loadServerData();
+                } else {
+                    document.getElementById("loginError").style.display = "block";
+                }
+            } catch (err) {
+                alert("Login request failed!");
+            }
+        }
+
+        function logout() {
+            window.location.reload();
+        }
+
+        async function loadServerData() {
+            try {
+                const res = await fetch('/api/data');
+                siteData = await res.json();
+                if(!siteData.hero.cvUrl) siteData.hero.cvUrl = "";
+                if(!siteData.contact.socials) siteData.contact.socials = [];
+                if(!siteData.messages) siteData.messages = [];
+                syncFormFields();
+                renderMessagesTable();
+            } catch (err) {
+                console.error("Failed to load server data:", err);
+            }
+        }
+
+        async function syncToServer() {
+            try {
+                const res = await fetch('/api/data', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(siteData)
+                });
+                const result = await res.json();
+                if(result.success) {
+                    syncFormFields();
+                    alert("Saved directly into data.json code file!");
+                }
+            } catch (err) {
+                alert("Error saving data to code file!");
+            }
+        }
+
+        function renderMessagesTable() {
+            const msgs = siteData.messages || [];
+            document.getElementById("inboxBadge").innerText = `${msgs.length} Messages`;
+
+            const tbody = document.getElementById("dashMessagesTable");
+            if (msgs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--color-subheading); padding:20px;">No messages received yet.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = msgs.map(m => `
+                <tr>
+                    <td style="font-size:12px; color:var(--color-subheading); white-space:nowrap;">${m.date || 'N/A'}</td>
+                    <td style="font-weight:600; color:#fff;">${m.name}</td>
+                    <td><a href="mailto:${m.email}" style="color:var(--color-primary);">${m.email}</a></td>
+                    <td style="line-height:1.5; color:#fff;">${m.message}</td>
+                    <td><button class="btn-sm-del" onclick="deleteMessage(${m.id})"><i class="fa-solid fa-trash"></i> Delete</button></td>
+                </tr>
+            `).join('');
+        }
+
+        async function deleteMessage(id) {
+            if(!confirm("Are you sure you want to delete this message?")) return;
+            try {
+                const res = await fetch(`/api/delete-message/${id}`, { method: 'DELETE' });
+                const data = await res.json();
+                if (data.success) {
+                    siteData.messages = siteData.messages.filter(m => m.id !== id);
+                    renderMessagesTable();
+                }
+            } catch (err) {
+                alert("Failed to delete message!");
+            }
+        }
+
+        function updateThumb(thumbId, src) {
+            const el = document.getElementById(thumbId);
+            if(el) el.src = src;
+        }
+
+        function syncFormFields() {
+            if(!siteData.logo) return;
+            document.getElementById("cfgAdminUser").value = siteData.adminAuth ? siteData.adminAuth.username : "admin";
+            document.getElementById("cfgAdminPass").value = siteData.adminAuth ? siteData.adminAuth.password : "123456";
+
+            document.getElementById("cfgLogoFirst").value = siteData.logo.first;
+            document.getElementById("cfgLogoHighlight").value = siteData.logo.highlight;
+            document.getElementById("cfgHeroBadge").value = siteData.hero.badge;
+            document.getElementById("cfgHeroName").value = siteData.hero.name;
+            document.getElementById("cfgHeroTagline").value = siteData.hero.tagline;
+            document.getElementById("cfgHeroDesc").value = siteData.hero.desc;
+            document.getElementById("cfgHeroImg").value = siteData.hero.img;
+            updateThumb('heroImgThumb', siteData.hero.img);
+            document.getElementById("cfgHeroBtn").value = siteData.hero.btn || "HIRE ME";
+            document.getElementById("cfgCvUrl").value = siteData.hero.cvUrl || "";
+
+            document.getElementById("cfgAboutTitle").value = siteData.about.title;
+            document.getElementById("cfgAboutDesc").value = siteData.about.desc;
+            document.getElementById("cfgAboutImg").value = siteData.about.img;
+            updateThumb('aboutImgThumb', siteData.about.img);
+
+            document.getElementById("cfgContactHeading").value = siteData.contact.heading;
+            document.getElementById("cfgPhone").value = siteData.contact.phone;
+            document.getElementById("cfgEmail").value = siteData.contact.email;
+            document.getElementById("cfgContactDesc").value = siteData.contact.desc;
+
+            // Render Tables
+            document.getElementById("dashSkillsTable").innerHTML = (siteData.skills || []).map((s, idx) => `
+                <tr><td>${s.name}</td><td>${s.subtitle || ''}</td><td>${s.percent}%</td><td><button class="btn-sm-del" onclick="deleteSkill(${idx})">Delete</button></td></tr>
+            `).join('');
+
+            document.getElementById("dashAwardsTable").innerHTML = (siteData.awards || []).map((a, idx) => `
+                <tr><td>${a.title}</td><td>${a.detail}</td><td><button class="btn-sm-del" onclick="deleteAward(${idx})">Delete</button></td></tr>
+            `).join('');
+
+            document.getElementById("dashExperienceTable").innerHTML = (siteData.experience || []).map((e, idx) => `
+                <tr><td>${e.role}</td><td>${e.duration}</td><td><button class="btn-sm-del" onclick="deleteExp(${idx})">Delete</button></td></tr>
+            `).join('');
+
+            document.getElementById("dashEducationTable").innerHTML = (siteData.education || []).map((ed, idx) => `
+                <tr>
+                    <td>${ed.title}</td>
+                    <td>${ed.school || '-'}</td>
+                    <td>${ed.dept || '-'}</td>
+                    <td>${ed.cgpa || '-'}</td>
+                    <td>${ed.year}</td>
+                    <td><button class="btn-sm-del" onclick="deleteEdu(${idx})">Delete</button></td>
+                </tr>
+            `).join('');
+
+            document.getElementById("dashServicesTable").innerHTML = (siteData.services || []).map((s, idx) => `
+                <tr><td><i class="${s.icon}"></i></td><td>${s.title}</td><td><button class="btn-sm-del" onclick="deleteService(${idx})">Delete</button></td></tr>
+            `).join('');
+
+            document.getElementById("dashProjectsTable").innerHTML = (siteData.projects || []).map((p, idx) => `
+                <tr>
+                    <td><img src="${p.img}" width="60" height="42" style="object-fit:cover; border-radius:4px;"></td>
+                    <td>${p.title}</td>
+                    <td>${p.cat}</td>
+                    <td><button class="btn-sm-del" onclick="deleteProject(${idx})">Delete</button></td>
+                </tr>
+            `).join('');
+
+            document.getElementById("dashSocialTable").innerHTML = (siteData.contact.socials || []).map((s, idx) => `
+                <tr>
+                    <td><i class="${s.icon}" style="font-size: 16px; color: var(--color-primary);"></i></td>
+                    <td>${s.platform}</td>
+                    <td><a href="${s.url}" target="_blank" style="color: var(--color-subheading); text-decoration: underline;">${s.url}</a></td>
+                    <td><button class="btn-sm-del" onclick="deleteSocialLink(${idx})">Delete</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function autoFillSocialIcon(platform) {
+            const iconInput = document.getElementById("newSocialIcon");
+            switch(platform) {
+                case "LinkedIn": iconInput.value = "fa-brands fa-linkedin-in"; break;
+                case "GitHub": iconInput.value = "fa-brands fa-github"; break;
+                case "Facebook": iconInput.value = "fa-brands fa-facebook-f"; break;
+                case "Instagram": iconInput.value = "fa-brands fa-instagram"; break;
+                case "Twitter": iconInput.value = "fa-brands fa-x-twitter"; break;
+                case "YouTube": iconInput.value = "fa-brands fa-youtube"; break;
+                default: iconInput.value = "fa-solid fa-link"; break;
+            }
+        }
+
+        function addSocialLink() {
+            const platform = document.getElementById("newSocialPlatform").value;
+            const icon = document.getElementById("newSocialIcon").value.trim() || "fa-solid fa-link";
+            const url = document.getElementById("newSocialUrl").value.trim();
+            if(!url) return alert("Please enter the profile URL!");
+            siteData.contact.socials.push({ platform, icon, url });
+            syncToServer();
+            document.getElementById("newSocialUrl").value = "";
+        }
+        function deleteSocialLink(idx) { siteData.contact.socials.splice(idx, 1); syncToServer(); }
+
+        function saveAdminAuth() {
+            const user = document.getElementById("cfgAdminUser").value.trim();
+            const pass = document.getElementById("cfgAdminPass").value.trim();
+            if(!user || !pass) return alert("Fill ID and Password");
+            siteData.adminAuth = { username: user, password: pass };
+            syncToServer();
+        }
+
+        function saveLogo() {
+            siteData.logo.first = document.getElementById("cfgLogoFirst").value;
+            siteData.logo.highlight = document.getElementById("cfgLogoHighlight").value;
+            syncToServer();
+        }
+
+        function saveHero() {
+            siteData.hero.badge = document.getElementById("cfgHeroBadge").value;
+            siteData.hero.name = document.getElementById("cfgHeroName").value;
+            siteData.hero.tagline = document.getElementById("cfgHeroTagline").value;
+            siteData.hero.desc = document.getElementById("cfgHeroDesc").value;
+            siteData.hero.img = document.getElementById("cfgHeroImg").value;
+            siteData.hero.btn = document.getElementById("cfgHeroBtn").value;
+            siteData.hero.cvUrl = document.getElementById("cfgCvUrl").value;
+            syncToServer();
+        }
+
+        function saveAbout() {
+            siteData.about.title = document.getElementById("cfgAboutTitle").value;
+            siteData.about.desc = document.getElementById("cfgAboutDesc").value;
+            siteData.about.img = document.getElementById("cfgAboutImg").value;
+            syncToServer();
+        }
+
+        function saveContact() {
+            siteData.contact.heading = document.getElementById("cfgContactHeading").value;
+            siteData.contact.phone = document.getElementById("cfgPhone").value;
+            siteData.contact.email = document.getElementById("cfgEmail").value;
+            siteData.contact.desc = document.getElementById("cfgContactDesc").value;
+            syncToServer();
+        }
+
+        function addSkill() {
+            const name = document.getElementById("newSkillName").value.trim();
+            const subtitle = document.getElementById("newSkillSubtitle").value.trim();
+            const percent = document.getElementById("newSkillPercent").value;
+            if(!name || !percent) return alert("Fill Name and Percent");
+            siteData.skills.push({ name, subtitle, percent: Number(percent) });
+            syncToServer();
+        }
+        function deleteSkill(idx) { siteData.skills.splice(idx, 1); syncToServer(); }
+
+        function addAward() {
+            const title = document.getElementById("newAwardTitle").value.trim();
+            const detail = document.getElementById("newAwardDetail").value.trim();
+            if(!title || !detail) return alert("Fill fields");
+            siteData.awards.push({ title, detail });
+            syncToServer();
+        }
+        function deleteAward(idx) { siteData.awards.splice(idx, 1); syncToServer(); }
+
+        function addExp() {
+            const role = document.getElementById("newExpRole").value.trim();
+            const duration = document.getElementById("newExpDuration").value.trim();
+            if(!role || !duration) return alert("Fill fields");
+            siteData.experience.push({ role, duration });
+            syncToServer();
+        }
+        function deleteExp(idx) { siteData.experience.splice(idx, 1); syncToServer(); }
+
+        function addEdu() {
+            const title = document.getElementById("newEduTitle").value.trim();
+            const school = document.getElementById("newEduSchool").value.trim();
+            const dept = document.getElementById("newEduDept").value.trim();
+            const cgpa = document.getElementById("newEduCgpa").value.trim();
+            const year = document.getElementById("newEduYear").value.trim();
+
+            if(!title || !year) return alert("Please fill at least Title and Passing Year!");
+            
+            siteData.education.push({ title, school, dept, cgpa, year });
+            syncToServer();
+
+            document.getElementById("newEduTitle").value = "";
+            document.getElementById("newEduSchool").value = "";
+            document.getElementById("newEduDept").value = "";
+            document.getElementById("newEduCgpa").value = "";
+            document.getElementById("newEduYear").value = "";
+        }
+        function deleteEdu(idx) { siteData.education.splice(idx, 1); syncToServer(); }
+
+        function addService() {
+            const title = document.getElementById("newServiceTitle").value.trim();
+            const icon = document.getElementById("newServiceIcon").value.trim() || 'fa-solid fa-code';
+            const desc = document.getElementById("newServiceDesc").value.trim();
+            if(!title || !desc) return alert("Fill fields");
+            siteData.services.push({ title, icon, desc });
+            syncToServer();
+        }
+        function deleteService(idx) { siteData.services.splice(idx, 1); syncToServer(); }
+
+        function addProject() {
+            const title = document.getElementById("newProjectTitle").value.trim();
+            const cat = document.getElementById("newProjectCat").value.trim();
+            const img = document.getElementById("newProjectImg").value.trim();
+            if(!title || !cat || !img) return alert("Please fill all fields");
+            siteData.projects.push({ title, cat, img });
+            syncToServer();
+            document.getElementById("newProjectTitle").value = '';
+            document.getElementById("newProjectCat").value = '';
+            document.getElementById("newProjectImg").value = '';
+            updateThumb('projectImgThumb', '');
+        }
+        function deleteProject(idx) { siteData.projects.splice(idx, 1); syncToServer(); }
+
+        async function handleCvUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const formData = new FormData();
+            formData.append('cvFile', file);
+            formData.append('fileType', 'cv');
+
+            try {
+                const res = await fetch('/api/upload-cv', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (data.success) {
+                    siteData.hero.cvUrl = data.cvUrl;
+                    document.getElementById("cfgCvUrl").value = data.cvUrl;
+                    alert("CV uploaded! Click 'Save Hero & CV' to finalize.");
+                }
+            } catch (err) { alert("Upload failed!"); }
+        }
+
+        // Cropper Logic
+        function handleFileSelect(e, target, aspectRatio) {
+            activeCropTarget = target;
+            currentAspectRatio = aspectRatio || (4 / 5);
+            const files = e.target.files;
+            if (files && files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = evt => openCropModal(evt.target.result);
+                reader.readAsDataURL(files[0]);
+            }
+        }
+
+        function openCropModal(imageSrc) {
+            const modalEl = document.getElementById("cropModalOverlay");
+            const imageEl = document.getElementById("imageToCrop");
+            imageEl.src = imageSrc;
+            modalEl.classList.add("active");
+            if (cropper) cropper.destroy();
+            cropper = new Cropper(imageEl, {
+                aspectRatio: currentAspectRatio,
+                viewMode: 1,
+                autoCropArea: 0.9,
+                responsive: true
+            });
+        }
+
+        function closeCropModal() {
+            document.getElementById("cropModalOverlay").classList.remove("active");
+            if (cropper) { cropper.destroy(); cropper = null; }
+        }
+
+        function cropAndUploadImage() {
+            if (!cropper) return;
+            let canvasWidth = activeCropTarget === 'project' ? 800 : 800;
+            let canvasHeight = activeCropTarget === 'project' ? 550 : 1000;
+
+            const canvas = cropper.getCroppedCanvas({ width: canvasWidth, height: canvasHeight, imageSmoothingQuality: 'high' });
+            canvas.toBlob(async blob => {
+                const formData = new FormData();
+                formData.append('croppedImage', blob, `${activeCropTarget}.jpg`);
+                formData.append('imageType', activeCropTarget);
+
+                try {
+                    const res = await fetch('/api/upload-image', { method: 'POST', body: formData });
+                    const data = await res.json();
+                    if (data.success) {
+                        if (activeCropTarget === 'hero') {
+                            document.getElementById("cfgHeroImg").value = data.imageUrl;
+                            updateThumb('heroImgThumb', data.imageUrl);
+                            siteData.hero.img = data.imageUrl;
+                        } else if (activeCropTarget === 'about') {
+                            document.getElementById("cfgAboutImg").value = data.imageUrl;
+                            updateThumb('aboutImgThumb', data.imageUrl);
+                            siteData.about.img = data.imageUrl;
+                        } else if (activeCropTarget === 'project') {
+                            document.getElementById("newProjectImg").value = data.imageUrl;
+                            updateThumb('projectImgThumb', data.imageUrl);
+                        }
+                        closeCropModal();
+                        alert("Image uploaded! Click 'Save' on that section.");
+                    }
+                } catch (err) { alert("Upload error!"); }
+            }, 'image/jpeg', 0.92);
+        }
+    </script>
+</body>
+</html>

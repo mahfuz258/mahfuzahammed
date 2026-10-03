@@ -1,0 +1,156 @@
+{
+  "adminAuth": {
+    "username": "admin",
+    "password": "123456"
+  },
+  "messages": [],
+  "logo": {
+    "first": "Mahfuz Ahammed ",
+    "highlight": "Rimon"
+  },
+  "hero": {
+    "badge": "FREELANCE DIGITAL DESIGNER",
+    "name": "Md. Mahfuz Ahammed Rimon",
+    "tagline": "Welcome to my World.",
+    "desc": "I am a digital designer & web developer. I create clean, intuitive user interfaces and build high performance digital experiences for modern brands worldwide.",
+    "img": "/uploads/file-1791006524326-11334340.jpg",
+    "btn": "HIRE ME",
+    "cvUrl": "/uploads/file-1791006537231-492590523.pdf"
+  },
+  "about": {
+    "title": "About Me",
+    "desc": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure.",
+    "img": "/uploads/file-1791006548733-692690468.jpg"
+  },
+  "skills": [
+    {
+      "name": "User experience design - UI/UX",
+      "subtitle": "Delight the user and make it work.",
+      "percent": 90
+    },
+    {
+      "name": "Web and user interface design - Development",
+      "subtitle": "Websites, web experiences.",
+      "percent": 85
+    },
+    {
+      "name": "Interaction design - Animation",
+      "subtitle": "I like to move it move it.",
+      "percent": 75
+    }
+  ],
+  "awards": [
+    {
+      "title": "Awwwards.com - Winner",
+      "detail": "2019 - 2020"
+    },
+    {
+      "title": "Design nominees - Site of the Day",
+      "detail": "2013 - 2014"
+    },
+    {
+      "title": "Duke of Edenburg Bronze Award",
+      "detail": "2024"
+    }
+  ],
+  "experience": [
+    {
+      "role": "Front-end Engineer - Google",
+      "duration": "2018 - Current"
+    },
+    {
+      "role": "Front-end Engineer - Microsoft",
+      "duration": "2017 - 2018"
+    },
+    {
+      "role": "Graphic Designer - ABC Institute, Los Angeles, CA",
+      "duration": "2007"
+    }
+  ],
+  "education": [
+    {
+      "title": "Secondary School Certificate (SSC) - GPA 5.00",
+      "year": "2019"
+    },
+    {
+      "title": "Additional Professional Certification - Web Development",
+      "year": "2023"
+    },
+    {
+      "title": "BBA in Management Information System",
+      "year": "Freshers"
+    },
+    {
+      "title": "BBA in Human Resource Management",
+      "year": "Freshers"
+    },
+    {
+      "title": "Higher Secoundary Certificate",
+      "year": "2021"
+    },
+    {
+      "title": "BBA in Management Information System",
+      "school": "IUB",
+      "dept": "BBA",
+      "cgpa": "2.25",
+      "year": "Freshers"
+    }
+  ],
+  "services": [
+    {
+      "icon": "fa-solid fa-chart-pie",
+      "title": "Business Strategy",
+      "desc": "Strategy formulation and product roadmaps tailored for growth."
+    },
+    {
+      "icon": "fa-solid fa-code",
+      "title": "Website Development",
+      "desc": "Modern, responsive frontend architectures with clean code."
+    },
+    {
+      "icon": "fa-solid fa-bullhorn",
+      "title": "Marketing & Growth",
+      "desc": "Performance tracking, SEO optimization, and audience retention."
+    }
+  ],
+  "projects": [
+    {
+      "title": "Getting tickets to the next show",
+      "cat": "Development",
+      "img": "https://images.unsplash.com/photo-1540575467063-178a50c2df87?fit=crop&w=800&q=80"
+    },
+    {
+      "title": "Portfolio Interactive Showcase",
+      "cat": "Design",
+      "img": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?fit=crop&w=800&q=80"
+    },
+    {
+      "title": "Developer Ecosystem Hub",
+      "cat": "Application",
+      "img": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?fit=crop&w=800&q=80"
+    }
+  ],
+  "contact": {
+    "heading": "Hire Me.",
+    "desc": "I am available for freelance work. Connect with me via phone or email.",
+    "phone": "01628551319",
+    "email": "mahfuzahamed2580@gmail.com",
+    "socials": [
+      {
+        "platform": "LinkedIn",
+        "icon": "fa-brands fa-linkedin-in",
+        "url": "https://linkedin.com"
+      },
+      {
+        "platform": "GitHub",
+        "icon": "fa-brands fa-github",
+        "url": "https://github.com"
+      },
+      {
+        "platform": "Facebook",
+        "icon": "fa-brands fa-facebook-f",
+        "url": "https://facebook.com"
+      }
+    ]
+  }
+}

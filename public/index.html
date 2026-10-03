@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Md. Mahfuz Ahammed Rimon - Portfolio</title>
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Cropper.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+
+    <style>
+        :root {
+            --color-primary: #f9004d;
+            --color-body: #191b1e;
+            --color-dark: #101010;
+            --color-card: #212428;
+            --color-text: #c4cfde;
+            --color-heading: #ffffff;
+            --color-subheading: rgba(196, 207, 222, 0.75);
+            --color-border: rgba(255, 255, 255, 0.08);
+            --gradient-primary: linear-gradient(135deg, #f9004d 0%, #ff416c 100%);
+            --shadow-card: 0 10px 30px 0 rgba(0, 0, 0, 0.35);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--color-dark); color: var(--color-text); line-height: 1.8; overflow-x: hidden; }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Montserrat', sans-serif; color: var(--color-heading); font-weight: 700; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        .container { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
+
+        .rn-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600;
+            letter-spacing: 1px; text-transform: uppercase; padding: 14px 34px;
+            border-radius: 6px; border: 2px solid transparent; cursor: pointer;
+            transition: var(--transition); gap: 8px;
+        }
+        .btn-primary { background: var(--gradient-primary); color: #fff; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(249,0,77,0.45); }
+        .btn-transparent { background: transparent; color: #ffffff; border: 2px solid var(--color-border); }
+        .btn-transparent:hover { border-color: var(--color-primary); color: var(--color-primary); transform: translateY(-3px); }
+
+        .site-header {
+            position: fixed; top: 0; left: 0; width: 100%; height: 90px;
+            background: rgba(16, 16, 16, 0.95); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--color-border); z-index: 999;
+            display: flex; align-items: center;
+        }
+
+        .header-container {
+            width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 40px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .logo-text { font-size: 26px; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; white-space: nowrap; }
+        .logo-text span { color: var(--color-primary); }
+        .logo-desktop { display: inline; }
+        .logo-mobile { display: none; }
+
+        .nav-menu { display: flex; align-items: center; gap: 36px; }
+        .nav-menu a { font-weight: 500; font-size: 15px; color: var(--color-text); transition: var(--transition); }
+        .nav-menu a:hover { color: var(--color-primary); }
+
+        .mobile-menu-trigger {
+            display: none; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--color-border);
+            width: 44px; height: 44px; border-radius: 8px; color: #ffffff; font-size: 20px;
+            cursor: pointer; align-items: center; justify-content: center; transition: var(--transition);
+        }
+        .mobile-menu-trigger:hover { color: var(--color-primary); border-color: var(--color-primary); }
+
+        .mobile-nav-drawer {
+            position: fixed; top: 0; right: -100%; width: 290px; height: 100vh;
+            background: #141619; border-left: 1px solid var(--color-border); z-index: 10000;
+            padding: 40px 25px; transition: right 0.4s ease; box-shadow: -10px 0 30px rgba(0,0,0,0.8);
+        }
+        .mobile-nav-drawer.open { right: 0; }
+        .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; padding-bottom: 15px; border-bottom: 1px solid var(--color-border); }
+        .drawer-close { background: transparent; border: none; color: #fff; font-size: 22px; cursor: pointer; }
+        .drawer-nav-list { display: flex; flex-direction: column; gap: 20px; }
+        .drawer-nav-list a { font-size: 17px; font-weight: 600; color: var(--color-text); transition: var(--transition); display: block; }
+        .drawer-nav-list a:hover { color: var(--color-primary); padding-left: 5px; }
+
+        .drawer-backdrop {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 9999; display: none;
+        }
+        .drawer-backdrop.show { display: block; }
+
+        /* Hero */
+        .hero-section {
+            min-height: 100vh; display: flex; align-items: center;
+            padding-top: 140px; padding-bottom: 80px; border-bottom: 1px solid var(--color-border);
+        }
+        .hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 50px; align-items: center; }
+        .hero-badge { color: var(--color-primary); font-size: 14px; letter-spacing: 3px; font-weight: 600; text-transform: uppercase; }
+        .hero-title { font-size: 56px; margin: 15px 0 20px; line-height: 1.2; letter-spacing: -1px; }
+        .hero-title span { color: rgba(255,255,255,0.7); font-weight: 400; font-size: 46px; display: block; }
+        .hero-desc { margin-bottom: 35px; font-size: 17px; color: var(--color-text); max-width: 550px; }
+        .hero-btn-group { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+
+        .hero-img-box {
+            border-radius: 12px; overflow: hidden; border: 1px solid var(--color-border);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5); aspect-ratio: 4 / 5; background: #151618;
+            max-width: 440px; width: 100%; margin: 0 auto;
+        }
+        .hero-img-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        /* About */
+        .section-padding { padding: 100px 0; border-bottom: 1px solid var(--color-border); }
+        .about-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 70px; align-items: flex-start; }
+        .about-img-box {
+            border-radius: 12px; overflow: hidden; border: 1px solid var(--color-border);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5); aspect-ratio: 4 / 5; background: #151618;
+        }
+        .about-img-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        .about-content .section-subtitle { color: var(--color-primary); font-size: 14px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 10px; }
+        .about-content .section-title { font-size: 42px; margin-bottom: 20px; }
+        .about-desc-text { color: var(--color-subheading); font-size: 16px; line-height: 1.8; margin-bottom: 35px; }
+
+        .tab-nav-list { display: flex; gap: 25px; border-bottom: 1px solid var(--color-border); margin-bottom: 30px; flex-wrap: wrap; }
+        .tab-btn { background: transparent; border: none; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 600; padding: 12px 0; cursor: pointer; position: relative; transition: var(--transition); }
+        .tab-btn.active { color: var(--color-primary); }
+        .tab-btn.active::after { content: ''; position: absolute; left: 0; bottom: -1px; width: 100%; height: 2px; background: var(--color-primary); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .skill-item-block { margin-bottom: 24px; }
+        .skill-header-line { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .skill-name-txt { font-size: 15px; font-weight: 600; color: #ffffff; }
+        .skill-sub-txt { font-size: 14px; color: #ffffff; font-style: italic; opacity: 0.85; }
+        .progress-track { height: 6px; background: #111317; border-radius: 10px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.6); }
+        
+        /* Skills Progress Bar Animation CSS */
+        .progress-bar-fill { 
+            height: 100%; 
+            background: var(--gradient-primary); 
+            border-radius: 10px; 
+            width: 0; /* Default width before animation */
+        }
+        
+        /* When tab is active, trigger the animation */
+        .tab-panel.active .progress-bar-fill {
+            animation: fillBar 1.2s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+        }
+
+        @keyframes fillBar {
+            0% { width: 0; }
+            100% { width: var(--target-width); }
+        }
+
+        .info-timeline-list { padding-left: 0; }
+        .info-timeline-item { position: relative; padding-left: 28px; margin-bottom: 20px; }
+        .info-timeline-item::before { content: "\f058"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; left: 0; top: 2px; color: var(--color-primary); font-size: 15px; }
+        .info-timeline-item h4 { font-size: 16px; margin-bottom: 3px; }
+        .info-timeline-item span { font-size: 13px; color: var(--color-subheading); display: block; }
+
+        .section-title-wrap { text-align: center; margin-bottom: 60px; }
+        .section-subtitle { color: var(--color-primary); text-transform: uppercase; letter-spacing: 2px; font-weight: 600; font-size: 14px; display: block; margin-bottom: 12px; }
+        .section-title { font-size: 40px; line-height: 1.3; }
+        .section-desc { max-width: 600px; margin: 15px auto 0; color: var(--color-subheading); font-size: 15px; }
+
+        /* Services Grid */
+        .services-layout-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 30px; }
+        .service-box-card {
+            background: var(--color-card); border-radius: 12px; padding: 45px 35px; border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-card); transition: var(--transition); position: relative; overflow: hidden;
+        }
+        .service-box-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 0%;
+            background: var(--gradient-primary); opacity: 0.08; transition: var(--transition); z-index: 1;
+        }
+        .service-box-card:hover { transform: translateY(-8px); border-color: rgba(249, 0, 77, 0.4); }
+        .service-box-card:hover::before { height: 100%; }
+        .service-box-icon { font-size: 42px; color: var(--color-primary); margin-bottom: 24px; display: inline-block; transition: var(--transition); }
+        .service-box-title { font-size: 22px; margin-bottom: 15px; position: relative; z-index: 2; }
+        .service-box-desc { font-size: 15px; color: var(--color-subheading); line-height: 1.7; position: relative; z-index: 2; }
+
+        /* Portfolio Grid */
+        .portfolio-cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 30px; }
+        .portfolio-project-card {
+            position: relative; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-card);
+            background: #111; cursor: pointer; border: 1px solid var(--color-border); transition: var(--transition);
+        }
+        .project-thumbnail { width: 100%; height: 380px; position: relative; overflow: hidden; }
+        .project-thumbnail img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; display: block; }
+        .project-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.3) 60%, transparent 100%);
+            display: flex; flex-direction: column; justify-content: flex-end; padding: 35px 30px; transition: var(--transition);
+        }
+        .project-category { color: var(--color-primary); text-transform: uppercase; font-size: 13px; font-weight: 600; letter-spacing: 1.5px; margin-bottom: 8px; }
+        .project-title { font-size: 22px; line-height: 1.35; margin-bottom: 18px; color: #ffffff; }
+        .project-btn-case {
+            display: inline-block; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 600;
+            letter-spacing: 1px; text-transform: uppercase; color: #ffffff; border: 2px solid var(--color-border);
+            padding: 8px 18px; border-radius: 4px; transition: var(--transition); align-self: flex-start;
+        }
+        .portfolio-project-card:hover .project-btn-case { background: var(--color-primary); border-color: var(--color-primary); color: #ffffff; }
+        .portfolio-project-card:hover .project-thumbnail img { transform: scale(1.1); }
+
+        .slider-dots-container { display: none; justify-content: center; align-items: center; gap: 8px; margin-top: 25px; }
+        .slider-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); transition: var(--transition); cursor: pointer; }
+        .slider-dot.active { background: var(--color-primary); width: 25px; border-radius: 10px; }
+
+        /* Modal Preview */
+        .preview-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(8px); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .preview-modal.show { display: flex; }
+        .preview-modal-body {
+            background: var(--color-card); max-width: 760px; width: 100%; border-radius: 12px;
+            border: 1px solid var(--color-border); padding: 35px; position: relative; animation: modalIn 0.35s ease;
+        }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+        .modal-close-trigger {
+            position: absolute; top: 20px; right: 20px; background: #111; border: none; color: #fff;
+            width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 16px; transition: var(--transition);
+        }
+        .modal-close-trigger:hover { background: var(--color-primary); }
+        .modal-preview-img { width: 100%; height: 360px; object-fit: cover; border-radius: 8px; margin-bottom: 20px; }
+
+        /* Contact Section */
+        .contact-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 50px; }
+        .contact-box { background: var(--color-card); padding: 40px; border-radius: 12px; border: 1px solid var(--color-border); }
+        .contact-info p { margin-bottom: 15px; font-size: 16px; }
+        .contact-info a { color: var(--color-primary); }
+
+        .contact-social-wrap { margin-top: 30px; padding-top: 25px; border-top: 1px solid var(--color-border); }
+        .contact-social-title { font-size: 14px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--color-subheading); margin-bottom: 16px; font-weight: 600; }
+        .social-link-list { display: flex; gap: 12px; flex-wrap: wrap; }
+        .social-link-item {
+            width: 48px; height: 48px; border-radius: 8px; background: #141518; border: 1px solid var(--color-border);
+            display: flex; align-items: center; justify-content: center; color: var(--color-text); font-size: 18px;
+            transition: var(--transition); box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .social-link-item:hover {
+            background: var(--gradient-primary); color: #ffffff; border-color: transparent;
+            transform: translateY(-4px); box-shadow: 0 8px 20px rgba(249, 0, 77, 0.4);
+        }
+
+        /* Footer & Back to top */
+        .site-footer { padding: 40px 0; background: #090a0c; border-top: 1px solid var(--color-border); text-align: center; position: relative; }
+        .footer-copyright-text { color: #8c8c8c; font-size: 15px; margin: 0; }
+        .footer-copyright-text a { color: #8c8c8c; font-weight: 500; transition: var(--transition); }
+        .footer-copyright-text a:hover { color: var(--color-primary); }
+
+        .back-to-top-arrow {
+            position: fixed; bottom: 30px; right: 30px; width: 52px; height: 52px;
+            background: #ffffff; color: #1a1a1a; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; font-size: 19px; cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); border: none; outline: none;
+            z-index: 9999; opacity: 0; visibility: hidden; transition: var(--transition);
+        }
+        .back-to-top-arrow.show { opacity: 1; visibility: visible; }
+        .back-to-top-arrow:hover { background: var(--color-primary); color: #ffffff; transform: translateY(-5px); }
+
+        /* Responsive Mobile CSS */
+        @media (max-width: 768px) {
+            .header-container { padding: 0 20px; }
+            .hero-section { padding-top: 120px; padding-bottom: 50px; min-height: auto; }
+            .hero-grid, .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 35px; }
+            .nav-menu { display: none; }
+            .mobile-menu-trigger { display: flex !important; }
+            .logo-desktop { display: none !important; }
+            .logo-mobile { display: inline !important; letter-spacing: 1px; }
+
+            .hero-grid > div:first-child { text-align: center !important; display: flex; flex-direction: column; align-items: center; }
+            .hero-title { font-size: 38px; line-height: 1.25; text-align: center !important; }
+            .hero-title span { font-size: 28px; }
+            .hero-desc { font-size: 15px; margin-bottom: 25px; text-align: center !important; max-width: 100% !important; }
+            .hero-btn-group { justify-content: center !important; width: 100%; }
+
+            .hero-img-box { max-width: 250px !important; margin: 15px auto 0 !important; border-radius: 12px; }
+            .about-img-box { display: none !important; }
+
+            .services-layout-grid, .portfolio-cards-grid {
+                display: flex !important; overflow-x: auto !important; scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch; gap: 20px !important; padding-bottom: 15px; scrollbar-width: none;
+            }
+            .services-layout-grid::-webkit-scrollbar, .portfolio-cards-grid::-webkit-scrollbar { display: none; }
+            .service-box-card, .portfolio-project-card { flex: 0 0 88% !important; scroll-snap-align: center; border-radius: 16px; }
+            .service-box-card { padding: 40px 30px; }
+            .project-thumbnail { height: 400px !important; }
+            .slider-dots-container { display: flex; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="site-header">
+        <div class="header-container">
+            <a href="#home" class="logo-text" id="liveLogo">
+                <span class="logo-desktop">Mahfuz Ahammed <span>Rimon</span></span>
+                <span class="logo-mobile">M.A.<span>R</span></span>
+            </a>
+
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#service">Services</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+
+            <button class="mobile-menu-trigger" onclick="toggleMobileNav()" title="Menu">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Drawer Menu -->
+    <div class="mobile-nav-drawer" id="mobileNavDrawer">
+        <div class="drawer-header">
+            <span class="logo-text" style="font-size: 22px;">M.A.<span>R</span></span>
+            <button class="drawer-close" onclick="toggleMobileNav()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <ul class="drawer-nav-list">
+            <li><a href="#home" onclick="toggleMobileNav()">Home</a></li>
+            <li><a href="#about" onclick="toggleMobileNav()">About</a></li>
+            <li><a href="#service" onclick="toggleMobileNav()">Services</a></li>
+            <li><a href="#portfolio" onclick="toggleMobileNav()">Portfolio</a></li>
+            <li><a href="#contact" onclick="toggleMobileNav()">Contact</a></li>
+        </ul>
+    </div>
+    <div class="drawer-backdrop" id="drawerBackdrop" onclick="toggleMobileNav()"></div>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="home">
+        <div class="container">
+            <div class="hero-grid">
+                <div>
+                    <span class="hero-badge" id="liveHeroBadge">FREELANCE DIGITAL DESIGNER</span>
+                    <h1 class="hero-title">
+                        Hello, I’m <span id="liveHeroName" style="color:var(--color-primary); font-weight:700; display:inline;">Md. Mahfuz Ahammed Rimon</span><br>
+                        <span id="liveHeroTagline">Welcome to my World.</span>
+                    </h1>
+                    <p class="hero-desc" id="liveHeroDesc"></p>
+                    
+                    <div class="hero-btn-group">
+                        <a href="#contact" class="rn-btn btn-primary" id="liveHeroBtn">HIRE ME</a>
+                        <a href="#" download id="liveDownloadCvBtn" class="rn-btn btn-transparent">
+                            <i class="fa-solid fa-download"></i> DOWNLOAD CV
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-img-box">
+                    <img id="liveHeroImg" src="" alt="Hero Portrait">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section-padding" id="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-img-box">
+                    <img id="liveAboutImg" src="" alt="About Portrait">
+                </div>
+                <div class="about-content">
+                    <span class="section-subtitle">VISIT MY PORTFOLIO & HIRE ME</span>
+                    <h2 class="section-title" id="liveAboutTitle">About Me</h2>
+                    <p class="about-desc-text" id="liveAboutDesc"></p>
+
+                    <!-- Tab Navigation -->
+                    <div class="tab-nav-list">
+                        <button class="tab-btn active" onclick="switchAboutTab(event, 'tab-education')">Education & Certification</button>
+                        <button class="tab-btn" onclick="switchAboutTab(event, 'tab-skills')">Main skills</button>
+                        <button class="tab-btn" onclick="switchAboutTab(event, 'tab-awards')">Awards</button>
+                        <button class="tab-btn" onclick="switchAboutTab(event, 'tab-experience')">Experience</button>
+                    </div>
+
+                    <!-- Tab 1: Education & Certification -->
+                    <div class="tab-panel active" id="tab-education">
+                        <ul class="info-timeline-list" id="liveEducationList"></ul>
+                    </div>
+
+                    <!-- Tab 2: Main Skills -->
+                    <div class="tab-panel" id="tab-skills">
+                        <div id="liveSkillsList"></div>
+                    </div>
+
+                    <!-- Tab 3: Awards -->
+                    <div class="tab-panel" id="tab-awards">
+                        <ul class="info-timeline-list" id="liveAwardsList"></ul>
+                    </div>
+
+                    <!-- Tab 4: Experience -->
+                    <div class="tab-panel" id="tab-experience">
+                        <ul class="info-timeline-list" id="liveExperienceList"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="section-padding" id="service">
+        <div class="container">
+            <div class="section-title-wrap">
+                <span class="section-subtitle">Features</span>
+                <h2 class="section-title">My Awesome Service</h2>
+                <p class="section-desc">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration.</p>
+            </div>
+            
+            <div class="services-layout-grid" id="liveServicesGrid"></div>
+            <div class="slider-dots-container" id="servicesSliderDots"></div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section class="section-padding" id="portfolio">
+        <div class="container">
+            <div class="section-title-wrap">
+                <span class="section-subtitle">VISIT MY PORTFOLIO AND KEEP YOUR FEEDBACK</span>
+                <h2 class="section-title">My Latest Project</h2>
+                <p class="section-desc">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration.</p>
+            </div>
+            
+            <div class="portfolio-cards-grid" id="liveProjectsGrid"></div>
+            <div class="slider-dots-container" id="sliderDots"></div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section-padding" id="contact">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-box">
+                    <h2 style="font-size: 30px; margin-bottom: 15px;" id="liveContactHeading">Hire Me.</h2>
+                    <p style="margin-bottom: 25px;" id="liveContactDesc"></p>
+                    
+                    <div class="contact-info">
+                        <p><strong>Phone:</strong> <a id="livePhone" href="#"></a></p>
+                        <p><strong>Email:</strong> <a id="liveEmail" href="#"></a></p>
+                    </div>
+
+                    <div class="contact-social-wrap">
+                        <p class="contact-social-title">Find with me</p>
+                        <div class="social-link-list" id="liveSocialList"></div>
+                    </div>
+                </div>
+
+                <div class="contact-box">
+                    <form id="clientContactForm" onsubmit="sendClientMessage(event)">
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label style="display:block; font-size:13px; text-transform:uppercase; color:var(--color-subheading); margin-bottom:5px;">Your Name</label>
+                            <input type="text" id="senderName" style="width:100%; background:#181a1d; border:1px solid var(--color-border); padding:12px 16px; border-radius:6px; color:#fff;" placeholder="Name" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label style="display:block; font-size:13px; text-transform:uppercase; color:var(--color-subheading); margin-bottom:5px;">Your Email</label>
+                            <input type="email" id="senderEmail" style="width:100%; background:#181a1d; border:1px solid var(--color-border); padding:12px 16px; border-radius:6px; color:#fff;" placeholder="Email" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label style="display:block; font-size:13px; text-transform:uppercase; color:var(--color-subheading); margin-bottom:5px;">Your Message</label>
+                            <textarea id="senderMessage" style="width:100%; background:#181a1d; border:1px solid var(--color-border); padding:12px 16px; border-radius:6px; color:#fff;" rows="5" placeholder="Message" required></textarea>
+                        </div>
+                        <button type="submit" id="msgSubmitBtn" class="rn-btn btn-primary" style="width: 100%;">SEND MESSAGE</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <p class="footer-copyright-text">
+                &copy; 2026. All rights reserved by <a href="#">Rainbow-Themes</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Back to top button -->
+    <button class="back-to-top-arrow" id="backToTopArrow" onclick="scrollToTop()" title="Back to top">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <!-- Case Study Modal -->
+    <div class="preview-modal" id="caseModal" onclick="closeModalOnBackdrop(event)">
+        <div class="preview-modal-body">
+            <button class="modal-close-trigger" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            <img id="mImg" class="modal-preview-img" src="" alt="Project Preview">
+            <span id="mCat" style="color: var(--color-primary); text-transform: uppercase; font-size: 13px; font-weight: 700; letter-spacing: 1px;"></span>
+            <h2 id="mTitle" style="margin: 10px 0 15px; font-size: 26px;"></h2>
+            <p id="mDesc" style="color: var(--color-subheading); margin-bottom: 25px; line-height: 1.7;"></p>
+            <a href="#" class="rn-btn btn-primary">View Project Details</a>
+        </div>
+    </div>
+
+    <!-- Client Script -->
+    <script>
+        let siteData = {};
+
+        async function loadServerData() {
+            try {
+                const res = await fetch('/api/data');
+                siteData = await res.json();
+                renderLive();
+            } catch (err) {
+                console.error("Failed to load server data:", err);
+            }
+        }
+
+        function toggleMobileNav() {
+            const drawer = document.getElementById("mobileNavDrawer");
+            const backdrop = document.getElementById("drawerBackdrop");
+            drawer.classList.toggle("open");
+            backdrop.classList.toggle("show");
+        }
+
+        async function sendClientMessage(e) {
+            e.preventDefault();
+            const btn = document.getElementById("msgSubmitBtn");
+            const name = document.getElementById("senderName").value.trim();
+            const email = document.getElementById("senderEmail").value.trim();
+            const message = document.getElementById("senderMessage").value.trim();
+
+            btn.innerText = "SENDING...";
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/contact-message', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, message })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert("Thank you! Your message has been sent directly to the Admin Dashboard.");
+                    document.getElementById("clientContactForm").reset();
+                } else {
+                    alert("Failed to send message: " + data.message);
+                }
+            } catch (err) {
+                alert("Error sending message! Please check server connection.");
+            } finally {
+                btn.innerText = "SEND MESSAGE";
+                btn.disabled = false;
+            }
+        }
+
+        function renderLive() {
+            if(!siteData.logo) return;
+            document.querySelector(".logo-desktop").innerHTML = `<span style="color: #ffffff;">${siteData.logo.first}</span><span>${siteData.logo.highlight}</span>`;
+            document.getElementById("liveHeroBadge").innerText = siteData.hero.badge;
+            document.getElementById("liveHeroName").innerText = siteData.hero.name;
+            document.getElementById("liveHeroTagline").innerText = siteData.hero.tagline;
+            document.getElementById("liveHeroDesc").innerText = siteData.hero.desc;
+            document.getElementById("liveHeroImg").src = siteData.hero.img;
+            document.getElementById("liveHeroBtn").innerText = siteData.hero.btn || "HIRE ME";
+
+            const cvBtn = document.getElementById("liveDownloadCvBtn");
+            if (siteData.hero.cvUrl) {
+                cvBtn.href = siteData.hero.cvUrl;
+                cvBtn.setAttribute("download", "Mahfuz_Ahammed_Rimon_CV.pdf");
+                cvBtn.style.display = "inline-flex";
+            } else {
+                cvBtn.href = "#";
+                cvBtn.onclick = () => alert("No CV file attached yet!");
+            }
+
+            document.getElementById("liveAboutTitle").innerText = siteData.about.title;
+            document.getElementById("liveAboutDesc").innerText = siteData.about.desc;
+            document.getElementById("liveAboutImg").src = siteData.about.img;
+
+            // Updated Skills render with animation target width custom property
+            document.getElementById("liveSkillsList").innerHTML = (siteData.skills || []).map(s => `
+                <div class="skill-item-block">
+                    <div class="skill-header-line">
+                        <span class="skill-name-txt">${s.name}</span>
+                        <span class="skill-sub-txt">${s.subtitle || ''}</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-bar-fill" style="--target-width: ${s.percent}%;"></div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById("liveAwardsList").innerHTML = (siteData.awards || []).map(a => `
+                <li class="info-timeline-item"><h4>${a.title}</h4><span>${a.detail}</span></li>
+            `).join('');
+
+            document.getElementById("liveExperienceList").innerHTML = (siteData.experience || []).map(e => `
+                <li class="info-timeline-item"><h4>${e.role}</h4><span>${e.duration}</span></li>
+            `).join('');
+
+            document.getElementById("liveEducationList").innerHTML = (siteData.education || []).map(ed => `
+                <li class="info-timeline-item">
+                    <h4>${ed.title}</h4>
+                    ${ed.school ? `<span><strong>Institution:</strong> ${ed.school}</span>` : ''}
+                    ${ed.dept ? `<span><strong>Department:</strong> ${ed.dept}</span>` : ''}
+                    ${ed.cgpa ? `<span><strong>CGPA / Grade:</strong> ${ed.cgpa}</span>` : ''}
+                    <span><strong>Year:</strong> ${ed.year}</span>
+                </li>
+            `).join('');
+
+            // Render Services & Mobile Dots
+            const services = siteData.services || [];
+            document.getElementById("liveServicesGrid").innerHTML = services.map(srv => `
+                <div class="service-box-card">
+                    <div class="service-box-icon"><i class="${srv.icon}"></i></div>
+                    <h3 class="service-box-title">${srv.title}</h3>
+                    <p class="service-box-desc">${srv.desc}</p>
+                </div>
+            `).join('');
+            setupCarouselSlider("liveServicesGrid", "servicesSliderDots", ".service-box-card", services.length);
+
+            // Render Projects & Mobile Dots
+            const projects = siteData.projects || [];
+            const gridEl = document.getElementById("liveProjectsGrid");
+            gridEl.innerHTML = projects.map((p, idx) => `
+                <div class="portfolio-project-card" data-index="${idx}" onclick="openPreviewModal('${p.title.replace(/'/g, "\\'")}', '${p.cat.replace(/'/g, "\\'")}', '${p.img}', 'Comprehensive project case study.')">
+                    <div class="project-thumbnail">
+                        <img src="${p.img}" alt="${p.title}">
+                        <div class="project-overlay">
+                            <span class="project-category">${p.cat}</span>
+                            <h3 class="project-title">${p.title}</h3>
+                            <span class="project-btn-case">CASE STUDY</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            setupCarouselSlider("liveProjectsGrid", "sliderDots", ".portfolio-project-card", projects.length);
+
+            document.getElementById("liveContactHeading").innerText = siteData.contact.heading;
+            document.getElementById("liveContactDesc").innerText = siteData.contact.desc;
+            document.getElementById("livePhone").innerText = siteData.contact.phone;
+            document.getElementById("livePhone").href = `tel:${siteData.contact.phone}`;
+            document.getElementById("liveEmail").innerText = siteData.contact.email;
+            document.getElementById("liveEmail").href = `mailto:${siteData.contact.email}`;
+
+            const socials = siteData.contact.socials || [];
+            document.getElementById("liveSocialList").innerHTML = socials.map(s => `
+                <a href="${s.url}" target="_blank" rel="noopener noreferrer" class="social-link-item" title="${s.platform}">
+                    <i class="${s.icon}"></i>
+                </a>
+            `).join('');
+        }
+
+        function setupCarouselSlider(containerId, dotsId, itemSelector, totalItems) {
+            const dotsContainer = document.getElementById(dotsId);
+            if (!dotsContainer) return;
+            dotsContainer.innerHTML = '';
+            
+            for(let i = 0; i < totalItems; i++) {
+                const dot = document.createElement("div");
+                dot.className = `slider-dot ${i === 0 ? 'active' : ''}`;
+                dot.onclick = () => {
+                    const container = document.getElementById(containerId);
+                    const item = container.querySelectorAll(itemSelector)[i];
+                    if (item) {
+                        item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    }
+                };
+                dotsContainer.appendChild(dot);
+            }
+
+            const container = document.getElementById(containerId);
+            container.addEventListener("scroll", () => {
+                const scrollLeft = container.scrollLeft;
+                const firstCard = container.querySelector(itemSelector);
+                const cardWidth = firstCard ? firstCard.offsetWidth + 20 : 300;
+                const activeIdx = Math.round(scrollLeft / cardWidth);
+
+                const dots = dotsContainer.querySelectorAll(".slider-dot");
+                dots.forEach((d, idx) => {
+                    if (idx === activeIdx) d.classList.add("active");
+                    else d.classList.remove("active");
+                });
+            });
+        }
+
+        function switchAboutTab(e, tabId) {
+            document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+            document.getElementById(tabId).classList.add("active");
+            e.currentTarget.classList.add("active");
+        }
+
+        const modal = document.getElementById("caseModal");
+        function openPreviewModal(title, category, img, desc) {
+            document.getElementById("mTitle").innerText = title;
+            document.getElementById("mCat").innerText = category;
+            document.getElementById("mImg").src = img;
+            document.getElementById("mDesc").innerText = desc;
+            modal.classList.add("show");
+        }
+        function closeModal() { modal.classList.remove("show"); }
+        function closeModalOnBackdrop(e) { if (e.target === modal) closeModal(); }
+
+        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        window.addEventListener('scroll', () => {
+            const arrowBtn = document.getElementById('backToTopArrow');
+            if (window.scrollY > 300) arrowBtn.classList.add('show');
+            else arrowBtn.classList.remove('show');
+        });
+
+        document.addEventListener("DOMContentLoaded", loadServerData);
+    </script>
+</body>
+</html>
